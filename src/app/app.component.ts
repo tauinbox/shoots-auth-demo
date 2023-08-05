@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../auth.service';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { shareReplay, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +17,9 @@ export class AppComponent {
   private fb = inject(FormBuilder);
 
   private isAuthenticatedSubject = new Subject<boolean | undefined>();
-  isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+  isAuthenticated$ = this.isAuthenticatedSubject
+    .asObservable()
+    .pipe(shareReplay());
 
   form = this.fb.group({
     email: '',
